@@ -20,7 +20,7 @@ const T: Record<Lang, Record<string, string>> = {
     badge: "Discord Rich Presence · for the web",
     h1a: "Your aura,", h1b: "wherever you browse.",
     sub: "A tiny Chrome extension that updates your Discord profile with whatever you're watching, listening to, or doing on the web.",
-    download: "Download Aura", how: "How it works",
+    download: "Download Aura", how: "How it works", tag_short: "Discord Rich Presence — for the open web.",
     free: "Free · Chromium browsers · No account required",
     feat_h: "Built for control.",
     f1t: "Auto-detect", f1d: "Recognises your activity on 27+ web platforms in real time.",
@@ -51,7 +51,7 @@ const T: Record<Lang, Record<string, string>> = {
     badge: "Rich Presence do Discord · para a web",
     h1a: "A tua aura,", h1b: "em qualquer lado da web.",
     sub: "Uma pequena extensão para Chrome que atualiza o teu perfil do Discord com o que estás a ver, ouvir ou fazer na web.",
-    download: "Descarregar Aura", how: "Como funciona",
+    download: "Descarregar Aura", how: "Como funciona", tag_short: "Rich Presence do Discord — para a web aberta.",
     free: "Grátis · Navegadores Chromium · Sem conta necessária",
     feat_h: "Pensado para teres o controlo.",
     f1t: "Deteção automática", f1d: "Reconhece a tua atividade em mais de 27 sites em tempo real.",
@@ -82,7 +82,7 @@ const T: Record<Lang, Record<string, string>> = {
     badge: "Rich Presence de Discord · para la web",
     h1a: "Tu aura,", h1b: "donde sea que navegues.",
     sub: "Una pequeña extensión de Chrome que actualiza tu perfil de Discord con lo que estás viendo, escuchando o haciendo en la web.",
-    download: "Descargar Aura", how: "Cómo funciona",
+    download: "Descargar Aura", how: "Cómo funciona", tag_short: "Rich Presence de Discord — para la web abierta.",
     free: "Gratis · Navegadores Chromium · Sin cuenta",
     feat_h: "Hecho para tener el control.",
     f1t: "Detección automática", f1d: "Reconoce tu actividad en más de 27 sitios en tiempo real.",
@@ -121,6 +121,30 @@ function download() {
   fetch("/aura.zip").then(r => { if (!r.ok) throw new Error("Download failed"); return r.blob(); })
     .then(blob => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "aura.zip"; a.click(); URL.revokeObjectURL(a.href); })
     .catch(e => alert(e.message));
+}
+
+function RotatingFeatures({ items }: { items: [string, string][] }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setI(v => (v + 1) % items.length), 3200);
+    return () => clearInterval(id);
+  }, [items.length]);
+  const a = items[i];
+  const b = items[(i + 1) % items.length];
+  return (
+    <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto min-h-[140px]">
+      {[a, b].map(([title, desc], k) => (
+        <div
+          key={`${i}-${k}`}
+          className="rounded-xl border border-border bg-card/50 backdrop-blur p-6 animate-[fadeSlide_.5s_ease-out]"
+        >
+          <div className="font-semibold mb-2">{title}</div>
+          <div className="text-sm text-muted-foreground leading-relaxed">{desc}</div>
+        </div>
+      ))}
+      <style>{`@keyframes fadeSlide { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }`}</style>
+    </div>
+  );
 }
 
 function Index() {
