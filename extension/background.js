@@ -33,14 +33,17 @@ async function log(level, message, meta) {
 }
 
 async function validateToken(token) {
-  try {
-    const r = await fetch(`${API}/users/@me`, { headers: { Authorization: `Bot ${token}` } });
-    if (!r.ok) return { ok: false, status: r.status, error: await r.text() };
-    const user = await r.json();
-    return { ok: true, user };
-  } catch (e) {
-    return { ok: false, error: String(e) };
+  // Try as user token first (no prefix), then as bot token
+  for (const auth of [token, `Bot ${token}`]) {
+    try {
+      const r = await fetch(`${API}/users/@me`, { headers: { Authorization: auth } });
+      if (r.ok) {
+        const user = await r.json();
+        return { ok: true, user, isBot: auth.startsWith("Bot ") };
+      }
+    } catch {}
   }
+  return { ok: false, error: "Invalid token" };
 }
 
 async function loginAndConnect() {
@@ -58,10 +61,11 @@ async function loginAndConnect() {
     return;
   }
   await chrome.storage.local.set({
-    botUser: { id: v.user.id, username: v.user.username, avatar: v.user.avatar, discriminator: v.user.discriminator },
+    botUser: { id: v.user.id, username: v.user.username, avatar: v.user.avatar, discriminator: v.user.discriminator, isBot: v.isBot },
+    isBotToken: v.isBot,
     lastError: null
   });
-  await log("info", `Logged in as ${v.user.username}`, { id: v.user.id });
+  await log("info", `Logged in as ${v.user.username}${v.isBot ? " (bot)" : ""}`, { id: v.user.id });
   chrome.runtime.sendMessage({ type: "auth:ok", user: v.user }).catch(() => {});
   await connect();
 }
