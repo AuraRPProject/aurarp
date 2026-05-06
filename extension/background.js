@@ -105,19 +105,18 @@ async function handle(payload) {
       heartbeatInterval = setInterval(() => {
         if (ws?.readyState === 1) ws.send(JSON.stringify({ op: 1, d: seq }));
       }, d.heartbeat_interval);
-      const { token } = await getCfg();
+      const { token, isBotToken } = await chrome.storage.local.get(["token", "isBotToken"]);
       if (sessionId && resumeUrl) {
         ws.send(JSON.stringify({ op: 6, d: { token, session_id: sessionId, seq } }));
       } else {
-        ws.send(JSON.stringify({
-          op: 2,
-          d: {
-            token,
-            intents: 0,
-            properties: { os: "browser", browser: "Aura", device: "Aura" },
-            presence: await buildPresence(lastActivity)
-          }
-        }));
+        const identify = {
+          token,
+          properties: { os: "Windows", browser: "Chrome", device: "" },
+          presence: await buildPresence(lastActivity)
+        };
+        if (isBotToken) identify.intents = 0;
+        else { identify.capabilities = 16381; identify.compress = false; }
+        ws.send(JSON.stringify({ op: 2, d: identify }));
       }
       break;
     }
