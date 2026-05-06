@@ -127,6 +127,21 @@ async function pushPresence() {
   ws.send(JSON.stringify({ op: 3, d: await buildPresence(lastActivity) }));
 }
 
+let lastTickAt = Date.now();
+async function tickTracking() {
+  const now = Date.now();
+  const delta = Math.min(15, Math.round((now - lastTickAt) / 1000));
+  lastTickAt = now;
+  if (!lastActivity || userIdle) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const { trackedToday = {} } = await chrome.storage.local.get("trackedToday");
+  trackedToday[today] = (trackedToday[today] || 0) + delta;
+  // prune old
+  for (const k of Object.keys(trackedToday)) if (k < today.slice(0,8) + "01") delete trackedToday[k];
+  await chrome.storage.local.set({ trackedToday });
+}
+setInterval(tickTracking, 10000);
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   (async () => {
     if (msg.type === "presence:update") {
