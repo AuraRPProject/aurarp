@@ -63,20 +63,21 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  /* Discord dark theme */
+  --background: oklch(0.27 0.013 285);
+  --foreground: oklch(0.96 0.005 285);
+  --card: oklch(0.245 0.012 285);
+  --card-foreground: oklch(0.96 0.005 285);
+  --popover: oklch(0.245 0.012 285);
+  --popover-foreground: oklch(0.96 0.005 285);
+  --primary: oklch(0.62 0.21 270);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.3 0.013 285);
+  --secondary-foreground: oklch(0.96 0.005 285);
+  --muted: oklch(0.3 0.013 285);
+  --muted-foreground: oklch(0.74 0.018 285);
+  --accent: oklch(0.62 0.21 270);
+  --accent-foreground: oklch(0.99 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.929 0.013 255.508);
