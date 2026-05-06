@@ -69,9 +69,10 @@
   </section>
 
   <section data-pane="account" class="pane">
-    <label data-i18n="botToken">Bot Token</label>
-    <input id="token" type="password" placeholder="MTk4..." />
-    <label><span data-i18n="appId">Application ID</span> <span class="muted" data-i18n="appIdHint">(for images)</span></label>
+    <label data-i18n="userToken">Discord Token</label>
+    <input id="token" type="password" placeholder="..." />
+    <p class="muted small" data-i18n="userTokenHint">Your token logs you in as your own account so the activity appears on your profile.</p>
+    <label><span data-i18n="appId">Application ID</span> <span class="muted" data-i18n="appIdHint">(optional, for images)</span></label>
     <input id="appId" type="text" placeholder="123456789012345678" />
     <button id="save" class="primary full" data-i18n="loginConnect">Login & Connect</button>
     <div id="loginStatus" class="login-status hidden"></div>
