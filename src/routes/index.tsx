@@ -21,6 +21,11 @@ const T: Record<Lang, Record<string, string>> = {
     h1a: "Your aura,", h1b: "wherever you browse.",
     sub: "A tiny Chrome extension that updates your Discord profile with whatever you're watching, listening to, or doing on the web.",
     download: "Download Aura", how: "How it works", tag_short: "Discord Rich Presence — for the open web.",
+    example_h: "Looks like this on your profile.",
+    ex_listening: "Listening to Spotify", ex_song: "Midnight City", ex_artist: "M83 — Hurry Up, We're Dreaming",
+    ex_open: "Open in browser",
+    bye_h: "Sad to see you go.", bye_sub: "Thanks for trying Aura. Mind telling us why you uninstalled? Reinstall anytime.",
+    bye_close: "Close",
     free: "Free · Chromium browsers · No account required",
     feat_h: "Built for control.",
     f1t: "Auto-detect", f1d: "Recognises your activity on 27+ web platforms in real time.",
@@ -52,6 +57,11 @@ const T: Record<Lang, Record<string, string>> = {
     h1a: "A tua aura,", h1b: "em qualquer lado da web.",
     sub: "Uma pequena extensão para Chrome que atualiza o teu perfil do Discord com o que estás a ver, ouvir ou fazer na web.",
     download: "Descarregar Aura", how: "Como funciona", tag_short: "Rich Presence do Discord — para a web aberta.",
+    example_h: "Aparece assim no teu perfil.",
+    ex_listening: "A ouvir no Spotify", ex_song: "Midnight City", ex_artist: "M83 — Hurry Up, We're Dreaming",
+    ex_open: "Abrir no browser",
+    bye_h: "Triste por te ver partir.", bye_sub: "Obrigado por experimentares o Aura. Volta quando quiseres.",
+    bye_close: "Fechar",
     free: "Grátis · Navegadores Chromium · Sem conta necessária",
     feat_h: "Pensado para teres o controlo.",
     f1t: "Deteção automática", f1d: "Reconhece a tua atividade em mais de 27 sites em tempo real.",
@@ -83,6 +93,11 @@ const T: Record<Lang, Record<string, string>> = {
     h1a: "Tu aura,", h1b: "donde sea que navegues.",
     sub: "Una pequeña extensión de Chrome que actualiza tu perfil de Discord con lo que estás viendo, escuchando o haciendo en la web.",
     download: "Descargar Aura", how: "Cómo funciona", tag_short: "Rich Presence de Discord — para la web abierta.",
+    example_h: "Se ve así en tu perfil.",
+    ex_listening: "Escuchando en Spotify", ex_song: "Midnight City", ex_artist: "M83 — Hurry Up, We're Dreaming",
+    ex_open: "Abrir en navegador",
+    bye_h: "Triste verte partir.", bye_sub: "Gracias por probar Aura. Vuelve cuando quieras.",
+    bye_close: "Cerrar",
     free: "Gratis · Navegadores Chromium · Sin cuenta",
     feat_h: "Hecho para tener el control.",
     f1t: "Detección automática", f1d: "Reconoce tu actividad en más de 27 sitios en tiempo real.",
@@ -149,11 +164,12 @@ function RotatingFeatures({ items }: { items: [string, string][] }) {
 
 function Index() {
   const [lang, setLang] = useState<Lang>("en");
+  const [bye, setBye] = useState(false);
   useEffect(() => {
     const saved = localStorage.getItem("aura-lang") as Lang | null;
-    if (saved && T[saved]) { setLang(saved); return; }
-    const nav = (navigator.language || "en").slice(0,2) as Lang;
-    if (T[nav]) setLang(nav);
+    if (saved && T[saved]) setLang(saved);
+    else { const nav = (navigator.language || "en").slice(0,2) as Lang; if (T[nav]) setLang(nav); }
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("goodbye") === "1") setBye(true);
   }, []);
   const change = (l: Lang) => { setLang(l); localStorage.setItem("aura-lang", l); };
   const x = T[lang];
@@ -162,8 +178,22 @@ function Index() {
 
   return (
     <main className="min-h-screen bg-background text-foreground overflow-hidden">
+      {bye && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-background/85 backdrop-blur p-6 animate-[fadeSlide_.4s_ease-out]">
+          <div className="max-w-md w-full rounded-2xl border border-border bg-card p-8 text-center shadow-2xl">
+            <div className="text-5xl mb-4">👋</div>
+            <h2 className="text-2xl font-bold mb-2">{x.bye_h}</h2>
+            <p className="text-muted-foreground mb-6 text-sm leading-relaxed">{x.bye_sub}</p>
+            <div className="flex gap-2 justify-center">
+              <button onClick={download} className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition">{x.download}</button>
+              <button onClick={() => { setBye(false); window.history.replaceState({}, "", "/"); }} className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-card transition">{x.bye_close}</button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 h-[600px] w-[900px] rounded-full bg-primary/15 blur-[120px]" />
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 h-[600px] w-[900px] rounded-full bg-primary/15 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] h-[400px] w-[400px] rounded-full bg-primary/10 blur-[100px]" />
       </div>
 
       <div className="mx-auto max-w-5xl px-6 py-10">
@@ -206,6 +236,28 @@ function Index() {
             </a>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">{x.tag_short}</p>
+        </section>
+
+        <section className="mt-24 flex justify-center">
+          <div className="w-full max-w-md rounded-2xl border border-border bg-card p-5 shadow-2xl shadow-primary/10 animate-[fadeSlide_.7s_ease-out]"
+               style={{ background: "linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%)" }}>
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{x.example_h}</div>
+            <div className="rounded-xl bg-background/60 border border-border p-4">
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{x.ex_listening}</div>
+              <div className="flex gap-3">
+                <div className="relative h-16 w-16 rounded-md bg-gradient-to-br from-primary to-purple-500 flex-none animate-pulse" />
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold truncate">{x.ex_song}</div>
+                  <div className="text-xs text-muted-foreground truncate">{x.ex_artist}</div>
+                  <div className="mt-2 h-1 rounded-full bg-border overflow-hidden">
+                    <div className="h-full w-1/3 bg-primary animate-[grow_3s_ease-in-out_infinite]" />
+                  </div>
+                </div>
+              </div>
+              <button className="mt-3 w-full rounded-md border border-border bg-card text-xs py-2 hover:bg-background transition">{x.ex_open}</button>
+            </div>
+          </div>
+          <style>{`@keyframes grow { 0%,100% { width: 20%; } 50% { width: 80%; } }`}</style>
         </section>
 
         <section id="features" className="mt-32">
