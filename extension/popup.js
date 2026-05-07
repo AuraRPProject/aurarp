@@ -1,7 +1,6 @@
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
-const { t: tFn } = window.__I18N__;
-const t = (l, k) => window.__aura_t ? window.__aura_t(l, k) : tFn(l, k);
+const { t } = window.__I18N__;
 
 const PLATFORMS = [
   ["youtube","YouTube"],["netflix","Netflix"],["spotify","Spotify"],["twitch","Twitch"],
