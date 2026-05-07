@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Aura — Rich Presence for the Web",
   "short_name": "Aura",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Show what you're watching, listening to or browsing on Discord — automatically, across 25+ websites.",
   "permissions": ["storage", "tabs", "scripting", "alarms", "idle", "notifications"],
   "host_permissions": ["<all_urls>"],
@@ -18,6 +18,6 @@
     }
   ],
   "web_accessible_resources": [
-    { "resources": ["welcome.html"], "matches": ["<all_urls>"] }
+    { "resources": ["welcome.html", "whatsnew.html"], "matches": ["<all_urls>"] }
   ]
 }
