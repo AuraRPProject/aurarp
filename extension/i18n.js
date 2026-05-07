@@ -32,6 +32,8 @@ const I18N = {
     manageSettings: "Manage settings", resetAll: "Reset everything", resetConfirm: "Reset all settings and disconnect?",
     showButtons: "Show 'Open' button on activity", showThumbnails: "Use page image as activity thumbnail",
     notifyConnect: "Notify when connected", topApps: "Top apps today", noApps: "No activity yet",
+    about: "About", aboutBlurb: "Rich Presence for the open web. Your activity, on your Discord profile, automatically.",
+    seeNew: "See what's new", updatedTitle: "Aura was updated", madeWith: "Crafted with ♥ — not affiliated with Discord.",
   },
   pt: {
     enable: "Ativar / desativar",
@@ -65,6 +67,8 @@ const I18N = {
     manageSettings: "Gerir definições", resetAll: "Repor tudo", resetConfirm: "Repor todas as definições e desligar?",
     showButtons: "Mostrar botão 'Abrir' na atividade", showThumbnails: "Usar imagem da página como miniatura",
     notifyConnect: "Notificar ao conectar", topApps: "Apps de hoje", noApps: "Sem atividade ainda",
+    about: "Sobre", aboutBlurb: "Rich Presence para a web aberta. A tua atividade, no teu perfil do Discord, automaticamente.",
+    seeNew: "Ver novidades", updatedTitle: "Aura foi atualizado", madeWith: "Feito com ♥ — não afiliado ao Discord.",
   },
   es: {
     enable: "Activar / desactivar",
@@ -98,6 +102,8 @@ const I18N = {
     manageSettings: "Gestionar ajustes", resetAll: "Restablecer todo", resetConfirm: "¿Restablecer todos los ajustes y desconectar?",
     showButtons: "Mostrar botón 'Abrir' en la actividad", showThumbnails: "Usar imagen de la página como miniatura",
     notifyConnect: "Notificar al conectar", topApps: "Apps de hoy", noApps: "Sin actividad aún",
+    about: "Acerca de", aboutBlurb: "Rich Presence para la web abierta. Tu actividad, en tu perfil de Discord, automático.",
+    seeNew: "Ver novedades", updatedTitle: "Aura se actualizó", madeWith: "Hecho con ♥ — no afiliado a Discord.",
   }
 };
 function __aura_t(lang, key) { return (I18N[lang] || I18N.en)[key] || I18N.en[key] || key; }
