@@ -72,12 +72,24 @@ function renderBot(botUser, connected) {
   const card = $("#botCard");
   if (!botUser) { card.classList.add("hidden"); return; }
   card.classList.remove("hidden");
-  $("#botName").textContent = botUser.username;
+  setText($("#botName"), botUser.username);
   $("#botPing").className = "pill " + (connected ? "on" : "off");
   const av = botUser.avatar
     ? `https://cdn.discordapp.com/avatars/${botUser.id}/${botUser.avatar}.png?size=64`
     : `https://cdn.discordapp.com/embed/avatars/${(parseInt(botUser.id) >> 22) % 6}.png`;
-  $("#botAvatar").src = av;
+  setSrc($("#botAvatar"), av);
+}
+
+async function checkUpdate() {
+  const ver = chrome.runtime.getManifest().version;
+  const { lastSeenVersion, pendingUpdate } = await chrome.storage.local.get(["lastSeenVersion","pendingUpdate"]);
+  setText($("#aboutVer"), "v" + ver);
+  if (pendingUpdate && lastSeenVersion !== ver) {
+    $("#updateBanner").classList.remove("hidden");
+    setText($("#updateVer"), `v${pendingUpdate.from || "?"} → v${ver}`);
+  } else {
+    $("#updateBanner").classList.add("hidden");
+  }
 }
 
 function setText(el, val) { if (el && el.textContent !== val) el.textContent = val; }
