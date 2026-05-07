@@ -238,6 +238,28 @@ function Index() {
           <p className="mt-4 text-xs text-muted-foreground">{x.tag_short}</p>
         </section>
 
+        <section className="mt-24 flex justify-center">
+          <div className="w-full max-w-md rounded-2xl border border-border bg-card p-5 shadow-2xl shadow-primary/10 animate-[fadeSlide_.7s_ease-out]"
+               style={{ background: "linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%)" }}>
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{x.example_h}</div>
+            <div className="rounded-xl bg-background/60 border border-border p-4">
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{x.ex_listening}</div>
+              <div className="flex gap-3">
+                <div className="relative h-16 w-16 rounded-md bg-gradient-to-br from-primary to-purple-500 flex-none animate-pulse" />
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold truncate">{x.ex_song}</div>
+                  <div className="text-xs text-muted-foreground truncate">{x.ex_artist}</div>
+                  <div className="mt-2 h-1 rounded-full bg-border overflow-hidden">
+                    <div className="h-full w-1/3 bg-primary animate-[grow_3s_ease-in-out_infinite]" />
+                  </div>
+                </div>
+              </div>
+              <button className="mt-3 w-full rounded-md border border-border bg-card text-xs py-2 hover:bg-background transition">{x.ex_open}</button>
+            </div>
+          </div>
+          <style>{`@keyframes grow { 0%,100% { width: 20%; } 50% { width: 80%; } }`}</style>
+        </section>
+
         <section id="features" className="mt-32">
           <h2 className="text-3xl font-bold mb-10 text-center">{x.feat_h}</h2>
           <RotatingFeatures items={features.map(([tk, dk]) => [x[tk], x[dk]] as [string, string])} />
