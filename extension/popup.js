@@ -170,6 +170,9 @@ $("#statusSel").addEventListener("change", () => send({ status: $("#statusSel").
 $("#enabled").addEventListener("change", () => send({ enabled: $("#enabled").checked }, true));
 $("#idleAway").addEventListener("change", () => send({ idleAway: $("#idleAway").checked }));
 $("#skipIncognito").addEventListener("change", () => send({ skipIncognito: $("#skipIncognito").checked }));
+$("#showButtons")?.addEventListener("change", () => send({ showButtons: $("#showButtons").checked }));
+$("#showThumbnails")?.addEventListener("change", () => send({ showThumbnails: $("#showThumbnails").checked }));
+$("#notifyOnConnect")?.addEventListener("change", () => send({ notifyOnConnect: $("#notifyOnConnect").checked }));
 
 $("#saveCustom").addEventListener("click", () =>
   send({ customText: $("#customText").value.trim(), customType: $("#customType").value }));
