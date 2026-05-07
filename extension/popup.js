@@ -59,6 +59,9 @@ async function load() {
   $("#idleAway").checked = cfg.idleAway !== false;
   $("#skipIncognito").checked = cfg.skipIncognito !== false;
   $("#enabled").checked = cfg.enabled !== false;
+  if ($("#showButtons")) $("#showButtons").checked = cfg.showButtons !== false;
+  if ($("#showThumbnails")) $("#showThumbnails").checked = cfg.showThumbnails !== false;
+  if ($("#notifyOnConnect")) $("#notifyOnConnect").checked = cfg.notifyOnConnect !== false;
   cachedDisabled = new Set(cfg.disabledPlatforms || []);
 
   applyLang();
