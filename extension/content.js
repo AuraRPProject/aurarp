@@ -24,10 +24,12 @@
         const game = document.querySelector('[data-a-target="stream-game-link"]')?.textContent?.trim();
         return { name: "Twitch", type: 3, details: streamer || document.title, state: game };
       } },
+    { id: "kick", match: h => h.includes("kick.com"), detect: () => ({ name: "Kick", type: 3, details: document.title.split(" - Kick")[0] }) },
     { id: "github", match: h => h.includes("github.com"), detect: () => {
         const repo = location.pathname.split("/").filter(Boolean).slice(0, 2).join("/");
         return { name: "GitHub", type: 0, details: repo ? `Browsing ${repo}` : "Browsing GitHub", state: document.title.split("·")[0]?.trim() };
       } },
+    { id: "gitlab", match: h => h.includes("gitlab.com"), detect: () => ({ name: "GitLab", type: 0, details: document.title.split("·")[0]?.trim() }) },
     { id: "x", match: h => h.includes("twitter.com") || h.includes("x.com"), detect: () => ({ name: "X", type: 0, details: "Scrolling X", state: document.title.replace(" / X", "") }) },
     { id: "reddit", match: h => h.includes("reddit.com"), detect: () => {
         const sub = location.pathname.match(/\/r\/([^/]+)/)?.[1];
@@ -50,9 +52,24 @@
     { id: "notion", match: h => h.includes("notion.so") || h.includes("notion.site"), detect: () => ({ name: "Notion", type: 0, details: "Taking notes", state: document.title }) },
     { id: "figma", match: h => h.includes("figma.com"), detect: () => ({ name: "Figma", type: 0, details: "Designing", state: document.title.replace(" – Figma", "") }) },
     { id: "chatgpt", match: h => h.includes("chatgpt.com") || h.includes("chat.openai.com"), detect: () => ({ name: "ChatGPT", type: 0, details: "Chatting with AI", state: document.title }) },
+    { id: "claude", match: h => h.includes("claude.ai"), detect: () => ({ name: "Claude", type: 0, details: "Chatting with Claude", state: document.title }) },
+    { id: "gemini", match: h => h.includes("gemini.google.com"), detect: () => ({ name: "Gemini", type: 0, details: "Chatting with Gemini", state: document.title }) },
     { id: "gmail", match: h => h.includes("mail.google.com"), detect: () => ({ name: "Gmail", type: 0, details: "Checking email" }) },
     { id: "pinterest", match: h => h.includes("pinterest."), detect: () => ({ name: "Pinterest", type: 0, details: "Browsing pins", state: document.title.split("|")[0]?.trim() }) },
     { id: "tiktok", match: h => h.includes("tiktok.com"), detect: () => ({ name: "TikTok", type: 3, details: "Watching TikToks", state: document.title.split("|")[0]?.trim() }) },
+    { id: "instagram", match: h => h.includes("instagram.com"), detect: () => ({ name: "Instagram", type: 0, details: "Scrolling", state: document.title.split("•")[0]?.trim() }) },
+    { id: "letterboxd", match: h => h.includes("letterboxd.com"), detect: () => ({ name: "Letterboxd", type: 0, details: "Logging films", state: document.title.split("•")[0]?.trim() }) },
+    { id: "anilist", match: h => h.includes("anilist.co"), detect: () => ({ name: "AniList", type: 3, details: "Tracking anime", state: document.title.split("·")[0]?.trim() }) },
+    { id: "mal", match: h => h.includes("myanimelist.net"), detect: () => ({ name: "MyAnimeList", type: 3, details: document.title.split("-")[0]?.trim() }) },
+    { id: "steam", match: h => h.includes("store.steampowered.com") || h.includes("steamcommunity.com"), detect: () => ({ name: "Steam", type: 0, details: "Browsing Steam", state: document.title.split("::")[0]?.trim() }) },
+    { id: "lastfm", match: h => h.includes("last.fm"), detect: () => ({ name: "Last.fm", type: 2, details: document.title.split("|")[0]?.trim() }) },
+    { id: "bandcamp", match: h => h.includes("bandcamp.com"), detect: () => ({ name: "Bandcamp", type: 2, details: document.title }) },
+    { id: "genius", match: h => h.includes("genius.com"), detect: () => ({ name: "Genius", type: 2, details: "Reading lyrics", state: document.title.split("|")[0]?.trim() }) },
+    { id: "coursera", match: h => h.includes("coursera.org"), detect: () => ({ name: "Coursera", type: 0, details: "Learning", state: document.title.split("|")[0]?.trim() }) },
+    { id: "udemy", match: h => h.includes("udemy.com"), detect: () => ({ name: "Udemy", type: 0, details: "Learning", state: document.title.split("|")[0]?.trim() }) },
+    { id: "khan", match: h => h.includes("khanacademy.org"), detect: () => ({ name: "Khan Academy", type: 0, details: "Studying", state: document.title.split("|")[0]?.trim() }) },
+    { id: "mdn", match: h => h.includes("developer.mozilla.org"), detect: () => ({ name: "MDN", type: 0, details: "Reading docs", state: document.title.split("|")[0]?.trim() }) },
+    { id: "duolingo", match: h => h.includes("duolingo.com"), detect: () => ({ name: "Duolingo", type: 0, details: "Learning a language" }) },
   ];
 
   function getThumb() {
@@ -86,8 +103,19 @@
     chrome.runtime.sendMessage({ type: "presence:update", activity: a, url: location.href }).catch(() => {});
   }
 
+  // Expose presence to the page so the website can detect the extension is installed.
+  try {
+    document.documentElement.setAttribute("data-aura-installed", "1");
+    window.postMessage({ source: "aura-extension", type: "installed", version: chrome.runtime.getManifest().version }, "*");
+  } catch {}
+  window.addEventListener("message", (e) => {
+    if (e.data?.source === "aura-page" && e.data.type === "ping") {
+      window.postMessage({ source: "aura-extension", type: "pong", version: chrome.runtime.getManifest().version }, "*");
+    }
+  });
+
   send();
-  setTimeout(send, 1500); // recheck once page hydrates
+  setTimeout(send, 1500);
   setInterval(send, 4000);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) { last = ""; send(); } });
   window.addEventListener("focus", () => { last = ""; send(); });
