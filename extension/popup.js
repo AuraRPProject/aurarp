@@ -1,17 +1,20 @@
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
-const { t } = window.__I18N__;
+const t = window.__I18N__.t;
 
 const PLATFORMS = [
-  ["youtube","YouTube"],["netflix","Netflix"],["spotify","Spotify"],["twitch","Twitch"],
-  ["github","GitHub"],["x","X"],["reddit","Reddit"],["soundcloud","SoundCloud"],
+  ["youtube","YouTube"],["netflix","Netflix"],["spotify","Spotify"],["twitch","Twitch"],["kick","Kick"],
+  ["github","GitHub"],["gitlab","GitLab"],["x","X"],["reddit","Reddit"],["soundcloud","SoundCloud"],
   ["primevideo","Prime Video"],["disneyplus","Disney+"],["hbomax","Max"],
   ["crunchyroll","Crunchyroll"],["stackoverflow","Stack Overflow"],
   ["wikipedia","Wikipedia"],["vscode","VS Code Web"],
   ["applemusic","Apple Music"],["tidal","Tidal"],["deezer","Deezer"],
   ["vimeo","Vimeo"],["linkedin","LinkedIn"],["medium","Medium"],
-  ["notion","Notion"],["figma","Figma"],["chatgpt","ChatGPT"],
-  ["gmail","Gmail"],["pinterest","Pinterest"],["tiktok","TikTok"],
+  ["notion","Notion"],["figma","Figma"],["chatgpt","ChatGPT"],["claude","Claude"],["gemini","Gemini"],
+  ["gmail","Gmail"],["pinterest","Pinterest"],["tiktok","TikTok"],["instagram","Instagram"],
+  ["letterboxd","Letterboxd"],["anilist","AniList"],["mal","MyAnimeList"],["steam","Steam"],
+  ["lastfm","Last.fm"],["bandcamp","Bandcamp"],["genius","Genius"],
+  ["coursera","Coursera"],["udemy","Udemy"],["khan","Khan Academy"],["mdn","MDN"],["duolingo","Duolingo"],
 ];
 
 let lang = "en";
@@ -56,6 +59,8 @@ async function load() {
   $("#statusSel").value = cfg.status || "online";
   $("#customText").value = cfg.customText || "";
   $("#customType").value = cfg.customType ?? "0";
+  if ($("#customState")) $("#customState").value = cfg.customState || "";
+  if ($("#customImg")) $("#customImg").value = cfg.customImg || "";
   $("#idleAway").checked = cfg.idleAway !== false;
   $("#skipIncognito").checked = cfg.skipIncognito !== false;
   $("#enabled").checked = cfg.enabled !== false;
@@ -193,8 +198,17 @@ $("#showThumbnails")?.addEventListener("change", () => send({ showThumbnails: $(
 $("#notifyOnConnect")?.addEventListener("change", () => send({ notifyOnConnect: $("#notifyOnConnect").checked }));
 
 $("#saveCustom").addEventListener("click", () =>
-  send({ customText: $("#customText").value.trim(), customType: $("#customType").value }));
-$("#clearCustom").addEventListener("click", async () => { $("#customText").value = ""; await send({ customText: "" }); });
+  send({
+    customText: $("#customText").value.trim(),
+    customState: $("#customState")?.value.trim() || "",
+    customImg: $("#customImg")?.value.trim() || "",
+    customType: $("#customType").value
+  }, true));
+$("#clearCustom").addEventListener("click", async () => {
+  $("#customText").value = ""; if ($("#customState")) $("#customState").value = "";
+  if ($("#customImg")) $("#customImg").value = "";
+  await send({ customText: "", customState: "", customImg: "" }, true);
+});
 
 $("#clear").addEventListener("click", () => chrome.runtime.sendMessage({ type: "presence:clear" }, refreshStatus));
 $("#disconnectBtn").addEventListener("click", () => chrome.runtime.sendMessage({ type: "disconnect" }, () => { refreshStatus(); load(); }));
