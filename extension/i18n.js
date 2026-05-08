@@ -34,6 +34,7 @@ const I18N = {
     notifyConnect: "Notify when connected", topApps: "Top apps today", noApps: "No activity yet",
     about: "About", aboutBlurb: "Rich Presence for the open web. Your activity, on your Discord profile, automatically.",
     seeNew: "See what's new", updatedTitle: "Aura was updated", madeWith: "Crafted with ♥ — not affiliated with Discord.",
+    customState: "State (line 2)", customImg: "Image URL",
   },
   pt: {
     enable: "Ativar / desativar",
@@ -69,6 +70,7 @@ const I18N = {
     notifyConnect: "Notificar ao conectar", topApps: "Apps de hoje", noApps: "Sem atividade ainda",
     about: "Sobre", aboutBlurb: "Rich Presence para a web aberta. A tua atividade, no teu perfil do Discord, automaticamente.",
     seeNew: "Ver novidades", updatedTitle: "Aura foi atualizado", madeWith: "Feito com ♥ — não afiliado ao Discord.",
+    customState: "Estado (linha 2)", customImg: "URL da imagem",
   },
   es: {
     enable: "Activar / desactivar",
@@ -104,6 +106,7 @@ const I18N = {
     notifyConnect: "Notificar al conectar", topApps: "Apps de hoy", noApps: "Sin actividad aún",
     about: "Acerca de", aboutBlurb: "Rich Presence para la web abierta. Tu actividad, en tu perfil de Discord, automático.",
     seeNew: "Ver novedades", updatedTitle: "Aura se actualizó", madeWith: "Hecho con ♥ — no afiliado a Discord.",
+    customState: "Estado (línea 2)", customImg: "URL de imagen",
   }
 };
 function __aura_t(lang, key) { return (I18N[lang] || I18N.en)[key] || I18N.en[key] || key; }
