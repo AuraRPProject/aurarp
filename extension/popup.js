@@ -59,6 +59,8 @@ async function load() {
   $("#statusSel").value = cfg.status || "online";
   $("#customText").value = cfg.customText || "";
   $("#customType").value = cfg.customType ?? "0";
+  if ($("#customState")) $("#customState").value = cfg.customState || "";
+  if ($("#customImg")) $("#customImg").value = cfg.customImg || "";
   $("#idleAway").checked = cfg.idleAway !== false;
   $("#skipIncognito").checked = cfg.skipIncognito !== false;
   $("#enabled").checked = cfg.enabled !== false;
@@ -196,8 +198,17 @@ $("#showThumbnails")?.addEventListener("change", () => send({ showThumbnails: $(
 $("#notifyOnConnect")?.addEventListener("change", () => send({ notifyOnConnect: $("#notifyOnConnect").checked }));
 
 $("#saveCustom").addEventListener("click", () =>
-  send({ customText: $("#customText").value.trim(), customType: $("#customType").value }));
-$("#clearCustom").addEventListener("click", async () => { $("#customText").value = ""; await send({ customText: "" }); });
+  send({
+    customText: $("#customText").value.trim(),
+    customState: $("#customState")?.value.trim() || "",
+    customImg: $("#customImg")?.value.trim() || "",
+    customType: $("#customType").value
+  }, true));
+$("#clearCustom").addEventListener("click", async () => {
+  $("#customText").value = ""; if ($("#customState")) $("#customState").value = "";
+  if ($("#customImg")) $("#customImg").value = "";
+  await send({ customText: "", customState: "", customImg: "" }, true);
+});
 
 $("#clear").addEventListener("click", () => chrome.runtime.sendMessage({ type: "presence:clear" }, refreshStatus));
 $("#disconnectBtn").addEventListener("click", () => chrome.runtime.sendMessage({ type: "disconnect" }, () => { refreshStatus(); load(); }));
