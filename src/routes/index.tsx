@@ -3,114 +3,108 @@ import { useEffect, useState } from "react";
 import auraIcon from "@/assets/aura-icon.png";
 import { downloadExtension } from "@/lib/aura";
 import { useExtension } from "@/hooks/useExtension";
+import { useLang, L } from "@/lib/i18n";
+import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Aura — Rich Presence for the Web" },
-      { name: "description", content: "Show what you're watching, listening to or browsing on Discord — automatically. Free Chromium extension supporting 40+ web platforms." },
+      { name: "description", content: "Show what you're watching, listening to or browsing on Discord — automatically. Free Chromium extension supporting 45+ web platforms." },
     ],
   }),
   component: Index,
 });
 
-type Lang = "en" | "pt" | "es";
-
-const T: Record<Lang, Record<string, string>> = {
+const HERO: Record<"en" | "pt" | "es", { badge: string; h1a: string; h1b: string; sub: string; download: string; free: string; example_h: string; ex_now: string[]; feat_h: string; feats: { t: string; d: string }[]; plat_h: string; plat_sub: string }> = {
   en: {
     badge: "Discord Rich Presence — for the open web",
     h1a: "Your aura,", h1b: "wherever you browse.",
-    sub: "A tiny extension that updates your Discord profile with whatever you're watching, listening to, or doing on the web.",
-    download: "Download", changelog: "Changelog", installed: "Aura is installed",
-    free: "Free · Chromium browsers · No account required",
+    sub: "Tiny extension. Updates your Discord profile with whatever you're watching, listening to, or doing on the web. No account, no servers.",
+    download: "Download", free: "Free · Chromium · No account · No DB",
     example_h: "Looks like this on your profile",
-    ex_listening: "Listening to Spotify", ex_song: "Midnight City", ex_artist: "M83 — Hurry Up, We're Dreaming",
-    ex_open: "Open in browser",
-    feat_h: "What it does",
-    f1: "Auto-detects your activity on 40+ web platforms.",
-    f2: "Custom activity with image, state and type.",
-    f3: "Per-site toggles, idle awareness, incognito skip.",
-    f4: "Token stays local — no servers, no DB, no telemetry.",
-    plat_h: "40+ platforms supported",
-    bye_h: "Sad to see you go.", bye_sub: "Thanks for trying Aura. Reinstall anytime.",
-    bye_close: "Close",
-    footer: "Not affiliated with Discord. Crafted with ♥.",
+    ex_now: ["Listening to Spotify", "Watching YouTube", "Playing on GitHub", "Competing on LeetCode"],
+    feat_h: "Everything you need",
+    feats: [
+      { t: "Auto-detect", d: "45+ websites tracked in real time, grouped by category." },
+      { t: "Custom activity", d: "Override with any text, image and type — live preview while you edit." },
+      { t: "Privacy first", d: "Token stays in your browser. No telemetry, no DB, no account." },
+      { t: "Languages", d: "EN / PT / ES across the extension and the website." },
+    ],
+    plat_h: "By category",
+    plat_sub: "Toggle anything you don't want from the popup.",
   },
   pt: {
     badge: "Discord Rich Presence — para a web aberta",
     h1a: "A tua aura,", h1b: "em qualquer lado da web.",
-    sub: "Uma extensão pequena que atualiza o teu perfil do Discord com o que estás a ver, ouvir ou fazer na web.",
-    download: "Descarregar", changelog: "Novidades", installed: "Aura está instalado",
-    free: "Grátis · Navegadores Chromium · Sem conta necessária",
+    sub: "Extensão pequena. Atualiza o teu perfil do Discord com o que estás a ver, ouvir ou fazer na web. Sem conta, sem servidores.",
+    download: "Descarregar", free: "Grátis · Chromium · Sem conta · Sem DB",
     example_h: "Aparece assim no teu perfil",
-    ex_listening: "A ouvir no Spotify", ex_song: "Midnight City", ex_artist: "M83 — Hurry Up, We're Dreaming",
-    ex_open: "Abrir no browser",
-    feat_h: "O que faz",
-    f1: "Deteta automaticamente em mais de 40 sites.",
-    f2: "Atividade personalizada com imagem, estado e tipo.",
-    f3: "Toggle por site, modo ausente, ignora anónimos.",
-    f4: "O token fica local — sem servidores, sem DB, sem telemetria.",
-    plat_h: "Mais de 40 plataformas",
-    bye_h: "Triste por te ver partir.", bye_sub: "Obrigado por experimentares o Aura. Volta quando quiseres.",
-    bye_close: "Fechar",
-    footer: "Não afiliado com o Discord. Feito com ♥.",
+    ex_now: ["A ouvir no Spotify", "A ver no YouTube", "A jogar no GitHub", "A competir no LeetCode"],
+    feat_h: "Tudo o que precisas",
+    feats: [
+      { t: "Auto-deteção", d: "45+ sites em tempo real, agrupados por categoria." },
+      { t: "Atividade custom", d: "Substitui com qualquer texto, imagem e tipo — preview ao vivo." },
+      { t: "Privacidade", d: "O token fica no browser. Sem telemetria, sem DB, sem conta." },
+      { t: "Idiomas", d: "EN / PT / ES em toda a extensão e site." },
+    ],
+    plat_h: "Por categoria",
+    plat_sub: "Desativa qualquer um que não queiras no popup.",
   },
   es: {
     badge: "Discord Rich Presence — para la web abierta",
     h1a: "Tu aura,", h1b: "donde sea que navegues.",
-    sub: "Una extensión pequeña que actualiza tu perfil de Discord con lo que estás viendo, escuchando o haciendo en la web.",
-    download: "Descargar", changelog: "Novedades", installed: "Aura está instalado",
-    free: "Gratis · Navegadores Chromium · Sin cuenta",
+    sub: "Extensión pequeña. Actualiza tu perfil de Discord con lo que estás viendo, escuchando o haciendo en la web. Sin cuenta, sin servidores.",
+    download: "Descargar", free: "Gratis · Chromium · Sin cuenta · Sin DB",
     example_h: "Se ve así en tu perfil",
-    ex_listening: "Escuchando en Spotify", ex_song: "Midnight City", ex_artist: "M83 — Hurry Up, We're Dreaming",
-    ex_open: "Abrir en navegador",
-    feat_h: "Qué hace",
-    f1: "Detecta automáticamente en 40+ sitios.",
-    f2: "Actividad personalizada con imagen, estado y tipo.",
-    f3: "Toggle por sitio, ausente automático, ignora incógnito.",
-    f4: "El token queda local — sin servidores, sin DB, sin telemetría.",
-    plat_h: "Más de 40 plataformas",
-    bye_h: "Triste verte partir.", bye_sub: "Gracias por probar Aura. Vuelve cuando quieras.",
-    bye_close: "Cerrar",
-    footer: "No afiliado con Discord. Hecho con ♥.",
+    ex_now: ["Escuchando en Spotify", "Viendo YouTube", "Jugando en GitHub", "Compitiendo en LeetCode"],
+    feat_h: "Todo lo que necesitas",
+    feats: [
+      { t: "Auto-detección", d: "45+ sitios en tiempo real, agrupados por categoría." },
+      { t: "Actividad custom", d: "Sustituye con cualquier texto, imagen y tipo — vista previa en vivo." },
+      { t: "Privacidad", d: "El token queda en el navegador. Sin telemetría, sin DB, sin cuenta." },
+      { t: "Idiomas", d: "EN / PT / ES en toda la extensión y el sitio." },
+    ],
+    plat_h: "Por categoría",
+    plat_sub: "Desactiva cualquiera que no quieras en el popup.",
   },
 };
 
-const PLATFORMS = [
-  "YouTube","Netflix","Spotify","Twitch","Kick","GitHub","GitLab","X","Reddit","SoundCloud",
-  "Prime Video","Disney+","Max","Crunchyroll","Stack Overflow","Wikipedia","VS Code Web",
-  "Apple Music","Tidal","Deezer","Vimeo","LinkedIn","Medium","Notion","Figma",
-  "ChatGPT","Claude","Gemini","Gmail","Pinterest","TikTok","Instagram",
-  "Letterboxd","AniList","MyAnimeList","Steam","Last.fm","Bandcamp","Genius",
-  "Coursera","Udemy","Khan Academy","MDN","Duolingo",
+const CATEGORIES: { name: { en: string; pt: string; es: string }; items: string[] }[] = [
+  { name: { en: "Streaming & Video", pt: "Streaming e Vídeo", es: "Streaming y Vídeo" }, items: ["YouTube","Netflix","Prime Video","Disney+","Max","Crunchyroll","Twitch","Kick","Vimeo","TikTok"] },
+  { name: { en: "Music", pt: "Música", es: "Música" }, items: ["Spotify","SoundCloud","Apple Music","Tidal","Deezer","Last.fm","Bandcamp","Genius"] },
+  { name: { en: "Development", pt: "Desenvolvimento", es: "Desarrollo" }, items: ["GitHub","GitLab","Stack Overflow","VS Code Web","MDN","Figma"] },
+  { name: { en: "Social", pt: "Social", es: "Social" }, items: ["X","Reddit","Instagram","LinkedIn","Pinterest","Letterboxd","AniList","MyAnimeList","Steam"] },
+  { name: { en: "AI Chat", pt: "Chat IA", es: "Chat IA" }, items: ["ChatGPT","Claude","Gemini"] },
+  { name: { en: "Learning", pt: "Aprendizagem", es: "Aprendizaje" }, items: ["Coursera","Udemy","Khan Academy","Duolingo"] },
+  { name: { en: "Productivity", pt: "Produtividade", es: "Productividad" }, items: ["Notion","Gmail","Medium","Wikipedia"] },
 ];
 
 function Index() {
-  const [lang, setLang] = useState<Lang>("en");
-  const [bye, setBye] = useState(false);
+  const [lang] = useLang();
+  const x = HERO[lang];
+  const xL = L[lang];
   const { installed, version } = useExtension();
+  const [exIdx, setExIdx] = useState(0);
+  const [bye, setBye] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("aura-lang") as Lang | null;
-    if (saved && T[saved]) setLang(saved);
-    else { const nav = (navigator.language || "en").slice(0, 2) as Lang; if (T[nav]) setLang(nav); }
     if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("goodbye") === "1") setBye(true);
-  }, []);
-
-  const change = (l: Lang) => { setLang(l); localStorage.setItem("aura-lang", l); };
-  const x = T[lang];
+    const i = setInterval(() => setExIdx((n) => (n + 1) % x.ex_now.length), 3000);
+    return () => clearInterval(i);
+  }, [x.ex_now.length]);
 
   return (
-    <main className="min-h-screen bg-background text-foreground overflow-hidden">
+    <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {bye && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-background/85 backdrop-blur p-6 animate-[fadeSlide_.4s_ease-out]">
-          <div className="max-w-md w-full rounded-2xl border border-border bg-card p-8 text-center shadow-2xl">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-background/85 backdrop-blur p-6">
+          <div className="max-w-md w-full rounded-2xl border border-border bg-card p-8 text-center shadow-2xl animate-[fadeSlide_.4s_ease-out]">
             <div className="text-5xl mb-4">👋</div>
-            <h2 className="text-2xl font-bold mb-2">{x.bye_h}</h2>
-            <p className="text-muted-foreground mb-6 text-sm leading-relaxed">{x.bye_sub}</p>
+            <h2 className="text-2xl font-bold mb-2">Sad to see you go.</h2>
+            <p className="text-muted-foreground mb-6 text-sm">Thanks for trying Aura. Reinstall anytime.</p>
             <div className="flex gap-2 justify-center">
               <button onClick={downloadExtension} className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition">{x.download}</button>
-              <button onClick={() => { setBye(false); window.history.replaceState({}, "", "/"); }} className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-card transition">{x.bye_close}</button>
+              <button onClick={() => { setBye(false); window.history.replaceState({}, "", "/"); }} className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-card transition">Close</button>
             </div>
           </div>
         </div>
@@ -118,36 +112,20 @@ function Index() {
 
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute top-[-30%] left-1/2 -translate-x-1/2 h-[600px] w-[900px] rounded-full bg-primary/15 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] h-[400px] w-[400px] rounded-full bg-purple-500/10 blur-[100px]" />
       </div>
 
-      <div className="mx-auto max-w-4xl px-6 py-8">
-        <header className="flex items-center justify-between mb-16">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={auraIcon} alt="Aura" width={36} height={36} className="rounded-lg" />
-            <span className="font-semibold text-lg">Aura</span>
-          </Link>
-          <nav className="hidden sm:flex items-center gap-5 text-sm text-muted-foreground">
-            <Link to="/download" className="hover:text-foreground">{x.download}</Link>
-            <Link to="/changelog" className="hover:text-foreground">{x.changelog}</Link>
-          </nav>
-          <div className="flex gap-1 rounded-md border border-border bg-card p-0.5 text-xs">
-            {(["en","pt","es"] as Lang[]).map(l => (
-              <button key={l} onClick={() => change(l)}
-                className={`px-2 py-1 rounded ${lang===l ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        </header>
+      <div className="mx-auto max-w-5xl px-6 py-8">
+        <SiteHeader />
 
-        {/* Hero — minimal */}
-        <section className="text-center pt-8">
+        {/* Hero */}
+        <section className="text-center pt-6">
           <span className="inline-block rounded-full border border-border bg-card/50 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-wider text-muted-foreground animate-[fadeSlide_.5s_ease-out]">
             {x.badge}
           </span>
           <h1 className="mt-8 text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] animate-[fadeSlide_.6s_ease-out]">
             {x.h1a}<br />
-            <span className="text-primary">{x.h1b}</span>
+            <span className="bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">{x.h1b}</span>
           </h1>
           <p className="mt-7 text-lg text-muted-foreground max-w-xl mx-auto animate-[fadeSlide_.7s_ease-out]">{x.sub}</p>
 
@@ -155,62 +133,75 @@ function Index() {
             {installed ? (
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
                 <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                {x.installed}{version ? ` · v${version}` : ""}
+                {xL.installed}{version ? ` · v${version}` : ""}
               </div>
             ) : (
-              <button onClick={downloadExtension} className="rounded-lg bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition shadow-lg shadow-primary/30">
+              <button onClick={downloadExtension} className="rounded-lg bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition shadow-lg shadow-primary/30 hover:scale-[1.02]">
                 {x.download}
               </button>
             )}
-            <Link to="/changelog" className="rounded-lg border border-border bg-card/50 backdrop-blur px-7 py-3.5 text-sm font-semibold hover:bg-card transition">
-              {x.changelog}
+            <Link to="/dashboard" className="rounded-lg border border-border bg-card/50 backdrop-blur px-7 py-3.5 text-sm font-semibold hover:bg-card transition">
+              {xL.nav_dashboard}
             </Link>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">{x.free}</p>
         </section>
 
-        {/* Example card */}
+        {/* Live example */}
         <section className="mt-24 flex justify-center">
           <div className="w-full max-w-md rounded-2xl border border-border bg-card p-5 shadow-2xl shadow-primary/10 animate-[fadeSlide_.9s_ease-out]">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{x.example_h}</div>
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-3">{x.example_h}</div>
             <div className="rounded-xl bg-background/60 border border-border p-4">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{x.ex_listening}</div>
+              <div key={exIdx} className="text-[10px] uppercase tracking-wider text-primary font-bold mb-3 animate-[fadeSlide_.4s_ease-out]">
+                {x.ex_now[exIdx]}
+              </div>
               <div className="flex gap-3">
                 <div className="relative h-16 w-16 rounded-md bg-gradient-to-br from-primary to-purple-500 flex-none animate-pulse" />
                 <div className="min-w-0 flex-1">
-                  <div className="font-semibold truncate">{x.ex_song}</div>
-                  <div className="text-xs text-muted-foreground truncate">{x.ex_artist}</div>
+                  <div className="font-semibold truncate">Midnight City</div>
+                  <div className="text-xs text-muted-foreground truncate">M83 — Hurry Up, We're Dreaming</div>
                   <div className="mt-2 h-1 rounded-full bg-border overflow-hidden">
-                    <div className="h-full w-1/3 bg-primary animate-[grow_3s_ease-in-out_infinite]" />
+                    <div className="h-full bg-primary animate-[grow_3s_ease-in-out_infinite]" />
                   </div>
                 </div>
               </div>
-              <button className="mt-3 w-full rounded-md border border-border bg-card text-xs py-2 hover:bg-background transition">{x.ex_open}</button>
+              <button className="mt-3 w-full rounded-md border border-border bg-card text-xs py-2 hover:bg-background transition">Open in browser</button>
             </div>
           </div>
         </section>
 
-        {/* Minimal feature grid (no rotation, less noise) */}
+        {/* Features */}
         <section className="mt-24">
-          <h2 className="text-2xl font-bold mb-8 text-center">{x.feat_h}</h2>
-          <div className="grid sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
-            {[x.f1, x.f2, x.f3, x.f4].map((f, i) => (
-              <div key={i} className="rounded-xl border border-border bg-card/50 backdrop-blur p-5 text-sm leading-relaxed">{f}</div>
+          <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">{x.feat_h}</h2>
+          <div className="grid sm:grid-cols-2 gap-3 max-w-3xl mx-auto">
+            {x.feats.map((f, i) => (
+              <div key={i} className="rounded-xl border border-border bg-card/40 backdrop-blur p-5 hover:border-primary/40 transition">
+                <div className="font-semibold mb-1">{f.t}</div>
+                <div className="text-sm text-muted-foreground leading-relaxed">{f.d}</div>
+              </div>
             ))}
           </div>
         </section>
 
-        {/* Platforms — compact pills */}
+        {/* Categories */}
         <section className="mt-24">
-          <h2 className="text-2xl font-bold mb-6 text-center">{x.plat_h}</h2>
-          <div className="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
-            {PLATFORMS.map(p => (
-              <span key={p} className="rounded-full bg-card border border-border px-3 py-1 text-xs text-muted-foreground">{p}</span>
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center">{x.plat_h}</h2>
+          <p className="text-center text-sm text-muted-foreground mb-8">{x.plat_sub}</p>
+          <div className="grid sm:grid-cols-2 gap-3 max-w-3xl mx-auto">
+            {CATEGORIES.map((cat) => (
+              <div key={cat.name.en} className="rounded-xl border border-border bg-card/40 backdrop-blur p-5">
+                <div className="font-semibold mb-3 text-sm">{cat.name[lang]}</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {cat.items.map((it) => (
+                    <span key={it} className="rounded-full bg-background/60 border border-border px-2.5 py-0.5 text-xs text-muted-foreground">{it}</span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </section>
 
-        <footer className="mt-24 mb-6 text-center text-xs text-muted-foreground">{x.footer}</footer>
+        <SiteFooter />
       </div>
 
       <style>{`
