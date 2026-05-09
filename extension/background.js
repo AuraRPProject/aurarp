@@ -1,4 +1,3 @@
-// Aura background service worker — v1.2
 const GATEWAY_URL = "wss://gateway.discord.gg/?v=10&encoding=json";
 const API = "https://discord.com/api/v10";
 
