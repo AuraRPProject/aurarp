@@ -288,7 +288,7 @@ chrome.idle.onStateChanged.addListener(async (state) => {
 });
 
 // Uninstall thank-you page (works in all Chromium browsers)
-try { chrome.runtime.setUninstallURL("https://discord-rich-presence-app.lovable.app/?goodbye=1"); } catch {}
+try { chrome.runtime.setUninstallURL("https://github.com/AuraRPProject/aurarp"); } catch {}
 
 chrome.runtime.onInstalled.addListener(async ({ reason, previousVersion }) => {
   const version = chrome.runtime.getManifest().version;
