@@ -104,6 +104,19 @@
       <option value="3" data-i18n="typeWatching">Watching</option>
       <option value="5" data-i18n="typeCompeting">Competing in</option>
     </select>
+
+    <div class="muted small" style="margin-top:14px" data-i18n="livePreview">Live preview</div>
+    <div id="customPreview" class="preview-card">
+      <div class="preview-head" id="previewType">Playing a game</div>
+      <div class="preview-body">
+        <img id="previewImg" alt="" />
+        <div class="preview-text">
+          <div id="previewName" class="preview-name">—</div>
+          <div id="previewState" class="preview-sub"></div>
+        </div>
+      </div>
+    </div>
+
     <button id="saveCustom" class="primary full" data-i18n="apply">Apply</button>
     <button id="clearCustom" class="ghost full" data-i18n="removeOverride">Remove override</button>
   </section>
@@ -111,6 +124,10 @@
   <section data-pane="apps" class="pane">
     <p class="muted small" data-i18n="toggleSites">Toggle which sites are tracked.</p>
     <input id="appSearch" type="text" placeholder="Search…" class="search" />
+    <div class="row" style="margin-bottom:8px">
+      <button id="enableAll" class="ghost" data-i18n="enableAll">Enable all</button>
+      <button id="disableAll" class="ghost" data-i18n="disableAll">Disable all</button>
+    </div>
     <div id="platformList" class="platform-list"></div>
   </section>
 
@@ -164,7 +181,11 @@
     <p class="muted small" data-i18n="aboutBlurb">Rich Presence for the open web. Your activity, on your Discord profile, automatically.</p>
     <button id="openWhatsNew" class="ghost full" data-i18n="seeNew">See what's new</button>
     <button id="openWelcome" class="ghost full" data-i18n="setupGuide">Read the setup guide →</button>
-    <p class="muted small" style="margin-top:14px;text-align:center" data-i18n="madeWith">Crafted with ♥ — not affiliated with Discord.</p>
+    <p class="muted small" style="margin-top:14px;text-align:center">
+      <span data-i18n="madeBy">Made by</span>
+      <a href="https://srzking.vercel.app" target="_blank" style="color:var(--brand);text-decoration:none">SrKing</a>
+    </p>
+    <p class="muted small" style="text-align:center" data-i18n="madeWith">Crafted with ♥ — not affiliated with Discord.</p>
   </section>
 
   <script src="i18n.js"></script>

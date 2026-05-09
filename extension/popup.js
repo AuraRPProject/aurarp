@@ -2,20 +2,27 @@ const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 const t = window.__I18N__.t;
 
+// [id, name, category]
 const PLATFORMS = [
-  ["youtube","YouTube"],["netflix","Netflix"],["spotify","Spotify"],["twitch","Twitch"],["kick","Kick"],
-  ["github","GitHub"],["gitlab","GitLab"],["x","X"],["reddit","Reddit"],["soundcloud","SoundCloud"],
-  ["primevideo","Prime Video"],["disneyplus","Disney+"],["hbomax","Max"],
-  ["crunchyroll","Crunchyroll"],["stackoverflow","Stack Overflow"],
-  ["wikipedia","Wikipedia"],["vscode","VS Code Web"],
-  ["applemusic","Apple Music"],["tidal","Tidal"],["deezer","Deezer"],
-  ["vimeo","Vimeo"],["linkedin","LinkedIn"],["medium","Medium"],
-  ["notion","Notion"],["figma","Figma"],["chatgpt","ChatGPT"],["claude","Claude"],["gemini","Gemini"],
-  ["gmail","Gmail"],["pinterest","Pinterest"],["tiktok","TikTok"],["instagram","Instagram"],
-  ["letterboxd","Letterboxd"],["anilist","AniList"],["mal","MyAnimeList"],["steam","Steam"],
-  ["lastfm","Last.fm"],["bandcamp","Bandcamp"],["genius","Genius"],
-  ["coursera","Coursera"],["udemy","Udemy"],["khan","Khan Academy"],["mdn","MDN"],["duolingo","Duolingo"],
+  ["youtube","YouTube","streaming"],["netflix","Netflix","streaming"],["primevideo","Prime Video","streaming"],
+  ["disneyplus","Disney+","streaming"],["hbomax","Max","streaming"],["crunchyroll","Crunchyroll","streaming"],
+  ["twitch","Twitch","streaming"],["kick","Kick","streaming"],["vimeo","Vimeo","streaming"],["tiktok","TikTok","streaming"],
+  ["spotify","Spotify","music"],["soundcloud","SoundCloud","music"],["applemusic","Apple Music","music"],
+  ["tidal","Tidal","music"],["deezer","Deezer","music"],["lastfm","Last.fm","music"],
+  ["bandcamp","Bandcamp","music"],["genius","Genius","music"],
+  ["github","GitHub","dev"],["gitlab","GitLab","dev"],["stackoverflow","Stack Overflow","dev"],
+  ["vscode","VS Code Web","dev"],["mdn","MDN","dev"],["figma","Figma","dev"],
+  ["x","X","social"],["reddit","Reddit","social"],["instagram","Instagram","social"],
+  ["linkedin","LinkedIn","social"],["pinterest","Pinterest","social"],["letterboxd","Letterboxd","social"],
+  ["anilist","AniList","social"],["mal","MyAnimeList","social"],["steam","Steam","social"],
+  ["chatgpt","ChatGPT","ai"],["claude","Claude","ai"],["gemini","Gemini","ai"],
+  ["coursera","Coursera","learning"],["udemy","Udemy","learning"],["khan","Khan Academy","learning"],
+  ["duolingo","Duolingo","learning"],
+  ["notion","Notion","productivity"],["gmail","Gmail","productivity"],["medium","Medium","productivity"],
+  ["wikipedia","Wikipedia","productivity"],
 ];
+
+const CATEGORIES = ["streaming","music","dev","social","ai","learning","productivity","other"];
 
 let lang = "en";
 
@@ -24,6 +31,7 @@ function applyLang() {
   $$("[data-i18n]").forEach(el => { el.textContent = t(lang, el.dataset.i18n); });
   $$("[data-i18n-ph]").forEach(el => { el.placeholder = t(lang, el.dataset.i18nPh); });
   renderPlatforms();
+  updatePreview();
 }
 
 $$(".tabs button").forEach(b => b.addEventListener("click", () => {
@@ -38,14 +46,19 @@ let cachedDisabled = new Set();
 
 function renderPlatforms() {
   const filter = ($("#appSearch")?.value || "").toLowerCase();
-  $("#platformList").innerHTML = PLATFORMS
-    .filter(([_, n]) => n.toLowerCase().includes(filter))
-    .map(([id, name]) => `
+  const list = $("#platformList");
+  let html = "";
+  for (const cat of CATEGORIES) {
+    const items = PLATFORMS.filter(([id,name,c]) => (c||"other") === cat && name.toLowerCase().includes(filter));
+    if (!items.length) continue;
+    html += `<div class="cat-head">${t(lang,"cat_"+cat)} <span class="muted">(${items.length})</span></div>`;
+    html += items.map(([id, name]) => `
       <label class="platform">
         <span>${name}</span>
         <input type="checkbox" data-pid="${id}" ${cachedDisabled.has(id) ? "" : "checked"} />
-      </label>
-    `).join("");
+      </label>`).join("");
+  }
+  list.innerHTML = html;
   $$("#platformList input").forEach(i => i.addEventListener("change", savePlatforms));
 }
 
@@ -118,7 +131,6 @@ function refreshStatus() {
     const { trackedToday = {} } = await chrome.storage.local.get("trackedToday");
     const today = new Date().toISOString().slice(0,10);
     setText($("#todayMin"), String(Math.round((trackedToday[today] || 0) / 60)));
-    // Top apps
     const top = $("#topApps");
     if (top) {
       const entries = Object.entries(res.trackedByApp || {})
@@ -155,6 +167,25 @@ async function loadLogs() {
   });
 }
 
+function updatePreview() {
+  const name = ($("#customText")?.value || "").trim() || "—";
+  const state = ($("#customState")?.value || "").trim();
+  const img = ($("#customImg")?.value || "").trim();
+  const type = $("#customType")?.value || "0";
+  const labels = { "0": t(lang,"typePlaying"), "2": t(lang,"typeListening"), "3": t(lang,"typeWatching"), "5": t(lang,"typeCompeting") };
+  setText($("#previewType"), labels[type] || "");
+  setText($("#previewName"), name);
+  setText($("#previewState"), state);
+  const pi = $("#previewImg");
+  if (img) { pi.src = img; pi.style.display = "block"; }
+  else { pi.style.display = "none"; }
+}
+
+["customText","customState","customImg","customType"].forEach(id => {
+  document.getElementById(id)?.addEventListener("input", updatePreview);
+  document.getElementById(id)?.addEventListener("change", updatePreview);
+});
+
 $("#lang").addEventListener("change", async () => {
   lang = $("#lang").value;
   await send({ lang });
@@ -170,7 +201,6 @@ $("#save").addEventListener("click", async () => {
   const status = $("#loginStatus");
   status.className = "login-status info"; status.classList.remove("hidden");
   status.textContent = t(lang, "validating");
-  // Test token first
   chrome.runtime.sendMessage({ type: "auth:test", token }, async (res) => {
     if (!res?.ok) {
       status.className = "login-status err";
@@ -208,12 +238,19 @@ $("#clearCustom").addEventListener("click", async () => {
   $("#customText").value = ""; if ($("#customState")) $("#customState").value = "";
   if ($("#customImg")) $("#customImg").value = "";
   await send({ customText: "", customState: "", customImg: "" }, true);
+  updatePreview();
 });
 
 $("#clear").addEventListener("click", () => chrome.runtime.sendMessage({ type: "presence:clear" }, refreshStatus));
 $("#disconnectBtn").addEventListener("click", () => chrome.runtime.sendMessage({ type: "disconnect" }, () => { refreshStatus(); load(); }));
 
 $("#appSearch").addEventListener("input", renderPlatforms);
+$("#enableAll")?.addEventListener("click", () => { cachedDisabled = new Set(); renderPlatforms(); send({ disabledPlatforms: [] }); });
+$("#disableAll")?.addEventListener("click", () => {
+  cachedDisabled = new Set(PLATFORMS.map(p => p[0]));
+  renderPlatforms();
+  send({ disabledPlatforms: [...cachedDisabled] });
+});
 $("#refreshLogs").addEventListener("click", loadLogs);
 $("#clearLogs").addEventListener("click", () => chrome.runtime.sendMessage({ type: "logs:clear" }, loadLogs));
 
@@ -248,7 +285,6 @@ $("#resetBtn")?.addEventListener("click", async () => {
   await new Promise(r => chrome.storage.local.clear(r));
   chrome.runtime.sendMessage({ type: "disconnect" }, () => load());
 });
-
 
 function openPage(url) { chrome.tabs.create({ url: chrome.runtime.getURL(url) }); }
 $("#seeUpdate")?.addEventListener("click", async () => {

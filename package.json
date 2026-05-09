@@ -9,8 +9,12 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:pc": "electron-packager . Aura --platform=linux --arch=x64 --out=electron-release --overwrite --ignore=node_modules --ignore=^/src --ignore=^/public --ignore=^/extension",
+    "build:pc:win": "electron-packager . Aura --platform=win32 --arch=x64 --out=electron-release --overwrite --ignore=node_modules --ignore=^/src --ignore=^/public --ignore=^/extension",
+    "build:pc:mac": "electron-packager . Aura --platform=darwin --arch=x64 --out=electron-release --overwrite --ignore=node_modules --ignore=^/src --ignore=^/public --ignore=^/extension"
   },
+  "main": "electron/main.cjs",
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
     "@hookform/resolvers": "^5.2.2",
