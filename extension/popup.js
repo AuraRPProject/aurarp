@@ -2,7 +2,6 @@ const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 const t = window.__I18N__.t;
 
-// [id, name, category]
 const PLATFORMS = [
   ["youtube","YouTube","streaming"],["netflix","Netflix","streaming"],["primevideo","Prime Video","streaming"],
   ["disneyplus","Disney+","streaming"],["hbomax","Max","streaming"],["crunchyroll","Crunchyroll","streaming"],
