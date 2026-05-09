@@ -32,47 +32,51 @@
   </div>
 
   <a class="cta" href="#" onclick="window.close()" data-k="go">Awesome — close</a>
+  <p class="muted small" style="margin-top:18px;text-align:center">
+    <span data-k="madeBy">Made by</span>
+    <a href="https://srzking.vercel.app" target="_blank" style="color:var(--brand)">SrKing</a>
+  </p>
 </div>
 <script>
 const D = {
   en: {
-    tag: "A new version is here.", newH: "What's new", nextH: "Coming next", go: "Awesome — close",
+    tag: "A new version is here.", newH: "What's new", nextH: "Coming next", go: "Awesome — close", madeBy: "Made by",
     changes: [
-      "New minimal play-style icon",
-      "13 new platforms: Kick, GitLab, Claude, Gemini, Instagram, Letterboxd, AniList, MyAnimeList, Steam, Last.fm, Bandcamp, Genius, Coursera, Udemy, Khan Academy, MDN, Duolingo",
-      "Custom activity now supports state line + image URL",
-      "More reliable Discord gateway connection (cleaner identify, no buttons without app id)",
-      "Site detects if the extension is installed and adapts the page",
-      "New /download and /changelog pages on the website",
-      "Lots of small bug fixes"
+      "Platforms grouped by category (Streaming, Music, Dev, Social, AI, Learning, Productivity)",
+      "Live preview while editing the custom activity",
+      "Enable / Disable all sites with one click",
+      "New Apps tab search bar with category counts",
+      "Bug fixes: smoother token validation, cleaner reconnect, no flicker on status refresh",
+      "About tab shows credits & links to SrKing",
+      "Website: dashboard, full i18n on every page, PWA installable on Android"
     ],
-    next: ["Firefox build", "Spotify desktop sync", "Custom emoji status", "Steam game detection"]
+    next: ["Electron desktop app (Windows/macOS/Linux)", "Firefox build", "Spotify desktop sync", "Custom emoji status", "Steam game detection"]
   },
   pt: {
-    tag: "Nova versão disponível.", newH: "O que há de novo", nextH: "A caminho", go: "Fixe — fechar",
+    tag: "Nova versão disponível.", newH: "O que há de novo", nextH: "A caminho", go: "Fixe — fechar", madeBy: "Feito por",
     changes: [
-      "Novo ícon minimalista com play",
-      "13+ novas plataformas: Kick, GitLab, Claude, Gemini, Instagram, Letterboxd, AniList, MyAnimeList, Steam, Last.fm, Bandcamp, Genius, Coursera, Udemy, Khan, MDN, Duolingo",
-      "Atividade personalizada agora com linha de estado e URL de imagem",
-      "Ligação ao Discord mais fiável (identify mais limpo, sem botões sem app id)",
-      "O site deteta se a extensão está instalada e adapta-se",
-      "Novas páginas /download e /changelog no site",
-      "Várias correções"
+      "Plataformas agrupadas por categoria (Streaming, Música, Dev, Social, IA, Aprendizagem, Produtividade)",
+      "Pré-visualização ao vivo enquanto editas a atividade personalizada",
+      "Ativar / Desativar todos os sites com um clique",
+      "Pesquisa no separador Apps com contagem por categoria",
+      "Correções: validação de token mais suave, reconexão mais limpa, sem flicker",
+      "Aba 'Sobre' com créditos e link para o SrKing",
+      "Website: dashboard, traduções completas em cada página, PWA instalável no Android"
     ],
-    next: ["Versão Firefox", "Sincronização Spotify desktop", "Emoji personalizado no estado", "Deteção de jogos Steam"]
+    next: ["App desktop Electron (Windows/macOS/Linux)", "Versão Firefox", "Sincronização Spotify desktop", "Emoji personalizado", "Deteção de jogos Steam"]
   },
   es: {
-    tag: "Nueva versión disponible.", newH: "Novedades", nextH: "Próximamente", go: "Genial — cerrar",
+    tag: "Nueva versión disponible.", newH: "Novedades", nextH: "Próximamente", go: "Genial — cerrar", madeBy: "Hecho por",
     changes: [
-      "Nuevo icono minimalista con play",
-      "13+ plataformas nuevas: Kick, GitLab, Claude, Gemini, Instagram, Letterboxd, AniList, MyAnimeList, Steam, Last.fm, Bandcamp, Genius, Coursera, Udemy, Khan, MDN, Duolingo",
-      "Actividad personalizada con línea de estado y URL de imagen",
-      "Conexión a Discord más fiable",
-      "El sitio detecta si la extensión está instalada",
-      "Nuevas páginas /download y /changelog",
-      "Varias correcciones"
+      "Plataformas agrupadas por categoría (Streaming, Música, Dev, Social, IA, Aprendizaje, Productividad)",
+      "Vista previa en vivo al editar la actividad personalizada",
+      "Activar / Desactivar todos los sitios con un clic",
+      "Búsqueda en pestaña Apps con conteo por categoría",
+      "Bugs corregidos: validación de token más suave, reconexión limpia, sin parpadeo",
+      "Pestaña 'Acerca de' con créditos y link a SrKing",
+      "Sitio web: dashboard, traducciones completas en cada página, PWA instalable en Android"
     ],
-    next: ["Build para Firefox", "Sincronización Spotify desktop", "Emoji personalizado", "Detección de juegos Steam"]
+    next: ["App de escritorio Electron (Windows/macOS/Linux)", "Build Firefox", "Sincronización Spotify desktop", "Emoji personalizado", "Detección de juegos Steam"]
   }
 };
 async function apply(l){
