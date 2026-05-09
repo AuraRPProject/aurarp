@@ -1,4 +1,3 @@
-// i18n for Aura — EN / PT / ES
 const I18N = {
   en: {
     enable: "Enable / disable",
