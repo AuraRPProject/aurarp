@@ -1,7 +1,3 @@
-// Platform detectors. Each returns { name, details, state, type, startTimestamp? } or null.
-// type: 0=Playing, 2=Listening, 3=Watching, 5=Competing
-// Runs inside content script, has access to document.
-
 const PLATFORMS = [
   {
     id: "youtube",
