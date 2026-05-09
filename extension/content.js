@@ -103,7 +103,6 @@
     chrome.runtime.sendMessage({ type: "presence:update", activity: a, url: location.href }).catch(() => {});
   }
 
-  // Expose presence to the page so the website can detect the extension is installed.
   try {
     document.documentElement.setAttribute("data-aura-installed", "1");
     window.postMessage({ source: "aura-extension", type: "installed", version: chrome.runtime.getManifest().version }, "*");
