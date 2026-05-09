@@ -37,7 +37,6 @@ header { display: flex; align-items: center; justify-content: space-between; mar
 .switch input:checked + .slider { background: linear-gradient(135deg, var(--brand), var(--brand-2)); }
 .switch input:checked + .slider::before { transform: translateX(16px); }
 
-/* tabs */
 .tabs { display: flex; gap: 2px; background: var(--bg-2); padding: 3px; border-radius: 8px; margin-bottom: 12px; }
 .tabs button {
   flex: 1; background: transparent; border: 0; color: var(--muted);
