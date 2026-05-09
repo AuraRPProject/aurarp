@@ -108,9 +108,16 @@
     document.documentElement.setAttribute("data-aura-installed", "1");
     window.postMessage({ source: "aura-extension", type: "installed", version: chrome.runtime.getManifest().version }, "*");
   } catch {}
-  window.addEventListener("message", (e) => {
-    if (e.data?.source === "aura-page" && e.data.type === "ping") {
+  window.addEventListener("message", async (e) => {
+    if (e.data?.source !== "aura-page") return;
+    if (e.data.type === "ping") {
       window.postMessage({ source: "aura-extension", type: "pong", version: chrome.runtime.getManifest().version }, "*");
+    } else if (e.data.type === "dashreq") {
+      try {
+        const cfg = await chrome.storage.local.get(["trackedToday","trackedByApp"]);
+        const current = (() => { try { return detect(); } catch { return null; } })();
+        window.postMessage({ source: "aura-extension", type: "dashdata", data: { ...cfg, current } }, "*");
+      } catch {}
     }
   });
 

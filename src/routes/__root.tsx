@@ -83,10 +83,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: "Your Discord profile, automatically updated with what you're doing on the web." },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "icon", href: "/aura-icon-192.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/aura-icon-192.png" },
     ],
   }),
   shellComponent: RootShell,
